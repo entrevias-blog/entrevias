@@ -51,7 +51,7 @@ const miradasPreview = [
     <p class="eyebrow">AHORA MISMO</p>
     <dl>
       <div><dt>leyendo</dt><dd>algo que me hace subrayar demasiado</dd></div>
-      <div><dt>escuchando</dt><dd>una playlist para correr despacio</dd></div>
+      <div class="listening-row"><dt>escuchando</dt><dd id="spotify-listening">una playlist para correr despacio</dd></div>
       <div><dt>aprendiendo</dt><dd>cómo hacer de esta página un hogar</dd></div>
       <div><dt>pensando en</dt><dd>todas las cosas que caben entre dos destinos</dd></div>
     </dl>
@@ -63,4 +63,25 @@ const miradasPreview = [
     <a class="text-link" href="/sobre-mi">Más sobre mí <span>→</span></a>
   </section>
   <Footer />
+  <script>
+    const listening = document.querySelector('#spotify-listening');
+
+    fetch('/api/listening')
+      .then((response) => response.ok ? response.json() : Promise.reject())
+      .then(({ tracks }) => {
+        if (!tracks?.length || !listening) return;
+        listening.replaceChildren(
+          ...tracks.map((track, index) => {
+            const link = document.createElement('a');
+            link.href = track.url;
+            link.target = '_blank';
+            link.rel = 'noreferrer';
+            link.textContent = `${track.name} — ${track.artist}`;
+            if (index < tracks.length - 1) link.append(document.createElement('br'));
+            return link;
+          }),
+        );
+      })
+      .catch(() => {});
+  </script>
 </BaseLayout>
