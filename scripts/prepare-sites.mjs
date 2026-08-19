@@ -4,5 +4,16 @@ await mkdir('dist/server', { recursive: true });
 await cp('dist/_worker.js', 'dist/server/_worker.js', { recursive: true });
 await writeFile(
   'dist/server/index.js',
-  'export { default } from "./_worker.js/index.js";\n',
+  `import app from "./_worker.js/index.js";
+
+export default {
+  async fetch(request, env, ctx) {
+    const { pathname } = new URL(request.url);
+    if (pathname.startsWith("/_astro/") || pathname.startsWith("/images/")) {
+      return env.ASSETS.fetch(request);
+    }
+    return app.fetch(request, env, ctx);
+  },
+};
+`,
 );
