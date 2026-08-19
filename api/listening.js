@@ -1,4 +1,5 @@
 const tokenEndpoint = 'https://accounts.spotify.com/api/token';
+const currentlyPlayingEndpoint = 'https://api.spotify.com/v1/me/player/currently-playing';
 const recentlyPlayedEndpoint = 'https://api.spotify.com/v1/me/player/recently-played?limit=3';
 
 async function getAccessToken() {
@@ -28,20 +29,30 @@ export default async function handler(_request, response) {
     const accessToken = await getAccessToken();
     if (!accessToken) return response.status(204).end();
 
-    const spotifyResponse = await fetch(recentlyPlayedEndpoint, {
+    const spotifyResponse = await fetch(currentlyPlayingEndpoint, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
-    if (!spotifyResponse.ok) return response.status(204).end();
+    const current = spotifyResponse.status === 204 ? null : await spotifyResponse.json();
+    const currentTrack = current?.is_playing && current?.item?.type === 'track' ? current.item : null;
 
-    const { items = [] } = await spotifyResponse.json();
-    const tracks = items.map(({ track }) => ({
+    let track = currentTrack;
+    if (!track) {
+      const recentResponse = await fetch(recentlyPlayedEndpoint, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!recentResponse.ok) return response.status(204).end();
+      track = (await recentResponse.json()).items?.[0]?.track;
+    }
+    if (!track) return response.status(204).end();
+
+    const result = {
       name: track.name,
       artist: track.artists.map((artist) => artist.name).join(', '),
       url: track.external_urls.spotify,
-    }));
+    };
 
-    response.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
-    return response.status(200).json({ tracks });
+    response.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=120');
+    return response.status(200).json({ track: result });
   } catch {
     return response.status(204).end();
   }

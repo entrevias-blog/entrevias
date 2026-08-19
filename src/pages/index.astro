@@ -68,19 +68,14 @@ const miradasPreview = [
 
     fetch('/api/listening')
       .then((response) => response.ok ? response.json() : Promise.reject())
-      .then(({ tracks }) => {
-        if (!tracks?.length || !listening) return;
-        listening.replaceChildren(
-          ...tracks.map((track, index) => {
-            const link = document.createElement('a');
-            link.href = track.url;
-            link.target = '_blank';
-            link.rel = 'noreferrer';
-            link.textContent = `${track.name} — ${track.artist}`;
-            if (index < tracks.length - 1) link.append(document.createElement('br'));
-            return link;
-          }),
-        );
+      .then(({ track }) => {
+        if (!track || !listening) return;
+        const link = document.createElement('a');
+        link.href = track.url;
+        link.target = '_blank';
+        link.rel = 'noreferrer';
+        link.textContent = `${track.name} — ${track.artist}`;
+        listening.replaceChildren(link);
       })
       .catch(() => {});
   </script>

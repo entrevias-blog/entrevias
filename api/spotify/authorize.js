@@ -16,7 +16,7 @@ export default function handler(_request, response) {
     client_id: SPOTIFY_CLIENT_ID,
     response_type: 'code',
     redirect_uri: callbackUrl,
-    scope: 'user-read-recently-played',
+    scope: 'user-read-currently-playing user-read-recently-played',
     state,
   }).toString();
 
