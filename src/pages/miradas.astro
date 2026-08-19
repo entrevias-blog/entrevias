@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const images = [
+  'IMG_1690.JPG',
+  'IMG_1691.JPG',
+  'IMG_1692.JPG',
+  'IMG_1693.JPG',
+  'IMG_1694.JPG',
+  'IMG_1695.JPG',
+  'IMG_1696.JPG',
+  'IMG_1698.JPG',
+];
+---
+
+<BaseLayout title="Miradas — Entre Vías" description="Fotografías de Zaira Espinoza.">
+  <Nav />
+  <section class="section miradas-intro">
+    <p class="eyebrow">ARCHIVO FOTOGRÁFICO</p>
+    <h1>Miradas</h1>
+    <p>Fotografías de los lugares y momentos que se quedaron conmigo.</p>
+  </section>
+  <section class="section gallery-section">
+    <div class="miradas-gallery">
+      {images.map((image, index) => <img src={`/images/${image}`} alt={`Photograph from the Miradas archive, ${index + 1}`} loading="lazy" />)}
+    </div>
+  </section>
+  <Footer />
+</BaseLayout>

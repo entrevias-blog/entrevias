@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return [
+    { params: { section: 'historias' }, props: { title: 'Historias', intro: 'Notas personales, viajes, observaciones y las historias que valen la pena contar.' } },
+    { params: { section: 'lugares' }, props: { title: 'Lugares', intro: 'Guías vividas: lo que hicimos, lo que saltaría y lo que haría distinto.' } },
+    { params: { section: 'en-proceso' }, props: { title: 'En proceso', intro: 'Proyectos, carreras, preguntas y habilidades en construcción.' } },
+    { params: { section: 'sobre-mi' }, props: { title: 'Sobre mí', intro: 'Soy Zaira. Engineer by profession, curious about almost everything else.' } },
+  ];
+}
+
+const { title, intro } = Astro.props;
+---
+
+<BaseLayout title={`${title} — Entre Vías`}>
+  <Nav />
+  <section class="section page-intro">
+    <p class="eyebrow">ENTRE VÍAS</p>
+    <h1>{title}</h1>
+    <p>{intro}</p>
+    {title === 'Sobre mí' && (
+      <a class="work-link" href="/work">
+        <span>FOR WORK</span>
+        <strong>Zaira Espinoza — Engineer · AI/ML · Systems</strong>
+        <b>→</b>
+      </a>
+    )}
+    <div class="placeholder-note">Próximamente.</div>
+  </section>
+  <Footer />
+</BaseLayout>

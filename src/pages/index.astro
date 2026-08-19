@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const miradasPreview = [
+  'IMG_1690.JPG',
+  'IMG_1691.JPG',
+  'IMG_1694.JPG',
+  'IMG_1696.JPG',
+];
+---
+
+<BaseLayout>
+  <Nav />
+  <section class="hero">
+    <p class="eyebrow">UNA VIDA EN MOVIMIENTO</p>
+    <h1>ENTRE<br />VÍAS</h1>
+    <div class="vias" aria-hidden="true"><i></i><i></i></div>
+    <p class="hero-intro">Historias, lugares, miradas y cosas que todavía estoy aprendiendo.</p>
+    <a class="text-link" href="#reciente">Explorar lo reciente <span>↓</span></a>
+  </section>
+
+  <section class="feature section" id="reciente">
+    <img class="feature-image" src="/images/image-banff.JPG" alt="Wildflowers beside a lake in Banff" />
+    <div class="feature-copy">
+      <p class="eyebrow">DESDE BANFF · HISTORIAS · PRÓXIMAMENTE</p>
+      <h2>Cinco días entre montañas</h2>
+      <p>Turquoise lakes, very tired legs, packed sandwiches, and remembering how much I like being outside.</p>
+      <a class="text-link" href="/historias">Leer historia <span>→</span></a>
+    </div>
+  </section>
+
+  <section class="section lately">
+    <p class="eyebrow">ÚLTIMAMENTE</p>
+    <div class="story-grid">
+      <a class="story-card yellow" href="/en-proceso"><span>EN PROCESO</span><h3>Training for 26.2</h3><em>La ruta hacia Houston.</em></a>
+      <a class="story-card green" href="/en-proceso"><span>EN PROCESO</span><h3>Haciendo de Entre Vías un hogar</h3><em>La primera versión de una publicación personal.</em></a>
+      <a class="story-card terracotta" href="/lugares"><span>LUGARES</span><h3>72 horas en Ciudad de México</h3><em>Una guía vivida, no una lista de SEO.</em></a>
+    </div>
+  </section>
+
+  <section class="miradas section">
+    <div class="section-heading"><p class="eyebrow">MIRADAS</p><a class="text-link" href="/miradas">Ver archivo <span>→</span></a></div>
+    <div class="miradas-preview">
+      {miradasPreview.map((image, index) => <img src={`/images/${image}`} alt={`Photograph from the Miradas archive, ${index + 1}`} loading="lazy" />)}
+    </div>
+  </section>
+
+  <section class="now section">
+    <p class="eyebrow">AHORA MISMO</p>
+    <dl>
+      <div><dt>leyendo</dt><dd>algo que me hace subrayar demasiado</dd></div>
+      <div><dt>escuchando</dt><dd>una playlist para correr despacio</dd></div>
+      <div><dt>aprendiendo</dt><dd>cómo hacer de esta página un hogar</dd></div>
+      <div><dt>pensando en</dt><dd>todas las cosas que caben entre dos destinos</dd></div>
+    </dl>
+  </section>
+
+  <section class="about section">
+    <p class="eyebrow">HOLA, SOY ZAIRA</p>
+    <h2>Engineer by profession, curious about almost everything else.</h2>
+    <a class="text-link" href="/sobre-mi">Más sobre mí <span>→</span></a>
+  </section>
+  <Footer />
+</BaseLayout>
