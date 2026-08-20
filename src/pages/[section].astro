@@ -23,19 +23,22 @@ const { title, intro } = Astro.props;
     <p class="eyebrow">ENTRE VÍAS</p>
     <h1>{title}</h1>
     {title === 'Sobre mí' ? (
-      <>
-        <p class="about-tagline">{intro}</p>
-        <div class="about-copy">
-          <p>Hi, I’m Zaira. I’m curious by nature, and someone who is always trying to pay closer attention to the life she’s living.</p>
-          <p>Entre Vías is a place to keep stories, places, photographs, half-formed ideas, and the small things I want to remember. There’s room here for travel, long runs, underlined books, conversations, questions, and the paths that appear before you fully know where you’re going.</p>
-          <p>I don’t think I ever have all the answers. I hope to just make more space to look with intention, share what I’m learning, and keep living a life <em>en movimiento</em>.</p>
+      <div class="about-layout">
+        <div>
+          <p class="about-tagline">{intro}</p>
+          <div class="about-copy">
+            <p>Hi, I’m Zaira. I’m curious by nature, and someone who is always trying to pay closer attention to the life she’s living.</p>
+            <p>Entre Vías is a place to keep stories, places, photographs, half-formed ideas, and the small things I want to remember. There’s room here for travel, long runs, underlined books, conversations, questions, and the paths that appear before you fully know where you’re going.</p>
+            <p>I don’t think I ever have all the answers. I hope to just make more space to look with intention, share what I’m learning, and keep living a life <em>en movimiento</em>.</p>
+          </div>
+          <a class="work-link" href="/work">
+            <span>FOR WORK</span>
+            <strong>Zaira Espinoza — Engineer · AI/ML · Systems</strong>
+            <b>→</b>
+          </a>
         </div>
-        <a class="work-link" href="/work">
-          <span>FOR WORK</span>
-          <strong>Zaira Espinoza — Engineer · AI/ML · Systems</strong>
-          <b>→</b>
-        </a>
-      </>
+        <img class="about-photo" src="/images/web/zaira-banff.JPG" alt="Zaira standing among wildflowers in the Canadian Rockies" />
+      </div>
     ) : (
       <>
         <p>{intro}</p>
