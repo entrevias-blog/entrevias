@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
 
 const miradasPreview = [
   'IMG_1690.JPG',
@@ -9,6 +10,12 @@ const miradasPreview = [
   'IMG_1694.JPG',
   'IMG_1696.JPG',
 ];
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const featuredPost = posts.find((post) => post.data.featured) ?? posts[0];
+const latestPosts = posts.filter((post) => post.id !== featuredPost?.id).slice(0, 3);
+const cardColors = ['yellow', 'green', 'terracotta'];
 ---
 
 <BaseLayout>
@@ -22,22 +29,38 @@ const miradasPreview = [
   </section>
 
   <section class="feature section" id="reciente">
-    <img class="feature-image" src="/images/web/image-banff.JPG" alt="Wildflowers beside a lake in Banff" />
+    {featuredPost?.data.cover && <img class="feature-image" src={featuredPost.data.cover.src} alt="" />}
+    {!featuredPost?.data.cover && <div class="feature-image" aria-hidden="true"></div>}
     <div class="feature-copy">
-      <p class="eyebrow">DESDE BANFF · HISTORIAS · PRÓXIMAMENTE</p>
-      <h2>Cinco días entre montañas</h2>
-      <p>Turquoise lakes, very tired legs, packed sandwiches, and remembering how much I like being outside.</p>
-      <a class="text-link" href="/historias">Leer historia <span>→</span></a>
+      {featuredPost ? (
+        <>
+          <p class="eyebrow">{featuredPost.data.section} · {featuredPost.data.date.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' })}</p>
+          <h2>{featuredPost.data.title}</h2>
+          <p>{featuredPost.data.excerpt}</p>
+          <a class="text-link" href={`/${featuredPost.data.section}/${featuredPost.id}`}>Leer historia <span>→</span></a>
+        </>
+      ) : (
+        <>
+          <p class="eyebrow">HISTORIAS · PRÓXIMAMENTE</p>
+          <h2>La primera historia está por llegar.</h2>
+          <p>Este rincón se va llenando poco a poco: con lugares, miradas y cosas que vale la pena recordar.</p>
+          <a class="text-link" href="/historias">Explorar historias <span>→</span></a>
+        </>
+      )}
     </div>
   </section>
 
   <section class="section lately">
     <p class="eyebrow">ÚLTIMAMENTE</p>
-    <div class="story-grid">
-      <a class="story-card yellow" href="/en-proceso"><span>EN PROCESO</span><h3>Training for 26.2</h3><em>La ruta hacia Houston.</em></a>
-      <a class="story-card green" href="/en-proceso"><span>EN PROCESO</span><h3>Haciendo de Entre Vías un hogar</h3><em>La primera versión de una publicación personal.</em></a>
-      <a class="story-card terracotta" href="/lugares"><span>LUGARES</span><h3>72 horas en Ciudad de México</h3><em>Una guía vivida, no una lista de SEO.</em></a>
-    </div>
+    {latestPosts.length ? (
+      <div class="story-grid">
+        {latestPosts.map((post, index) => (
+          <a class={`story-card ${cardColors[index]}`} href={`/${post.data.section}/${post.id}`}>
+            <span>{post.data.section}</span><h3>{post.data.title}</h3><em>{post.data.excerpt}</em>
+          </a>
+        ))}
+      </div>
+    ) : <p class="empty-feed">Tus próximas publicaciones aparecerán aquí.</p>}
   </section>
 
   <section class="miradas section">

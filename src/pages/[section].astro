@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
 
 export const prerender = true;
 
@@ -15,6 +16,9 @@ export function getStaticPaths() {
 }
 
 const { title, intro } = Astro.props;
+const section = Astro.params.section;
+const posts = (await getCollection('posts', ({ data }) => !data.draft && data.section === section))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <BaseLayout title={`${title} — Entre Vías`}>
@@ -42,7 +46,20 @@ const { title, intro } = Astro.props;
     ) : (
       <>
         <p>{intro}</p>
-        <div class="placeholder-note">Próximamente.</div>
+        {posts.length ? (
+          <div class="archive-list">
+            {posts.map((post) => (
+              <a class="archive-item" href={`/${post.data.section}/${post.id}`}>
+                <div>
+                  <p class="eyebrow">{post.data.date.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' })}</p>
+                  <h2>{post.data.title}</h2>
+                  <p>{post.data.excerpt}</p>
+                </div>
+                {post.data.cover && <img src={post.data.cover.src} alt="" />}
+              </a>
+            ))}
+          </div>
+        ) : <div class="placeholder-note">Próximamente.</div>}
       </>
     )}
   </section>

@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { section: post.data.section, slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={`${post.data.title} — Entre Vías`} description={post.data.excerpt}>
+  <Nav />
+  <article class="post">
+    <header class="post-header section">
+      <p class="eyebrow">{post.data.section.replace('-', ' ')} · {post.data.date.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+      <h1>{post.data.title}</h1>
+      <p>{post.data.excerpt}</p>
+    </header>
+    {post.data.cover && <img class="post-cover" src={post.data.cover.src} alt="" />}
+    <div class="post-body section"><Content /></div>
+    {post.data.gallery.length > 0 && (
+      <section class="post-gallery section" aria-label="Galería de fotos">
+        {post.data.gallery.map((image) => <img src={image.src} alt="" loading="lazy" />)}
+      </section>
+    )}
+  </article>
+  <Footer />
+</BaseLayout>

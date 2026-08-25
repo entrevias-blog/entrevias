@@ -5,12 +5,22 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "dev:cms": "tinacms dev -c \"astro dev\"",
     "build": "astro build",
+    "build:cms": "tinacms build --content=local && astro build",
     "preview": "astro preview"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/mdx": "^4.3.14",
+    "@tinacms/astro": "^0.6.1",
+    "@tinacms/cli": "^2.6.1",
+    "@vercel/analytics": "2.0.1",
     "astro": "^5.0.0",
+    "tinacms": "^3.12.1",
     "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.3.0"
   }
 }
